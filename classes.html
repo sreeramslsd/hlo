@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Class Attendance Search</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  body { 
+    padding: 2rem; 
+    font-family: 'Segoe UI', Tahoma; 
+    background: url("{{ url_for('static', filename='images/WhatsApp Image 2025-09-25 at 04.26.53_428b4051.jpg') }}") 
+                no-repeat center center fixed;
+    background-size: cover;
+  }
+  .container { 
+    max-width: 900px; 
+    background: rgba(255,255,255,0.8); /* semi-transparent for readability */
+    padding: 2rem; 
+    border-radius: 12px; 
+    box-shadow: 0 0 15px #ccc; 
+  }
+  h2 { margin-bottom: 1.5rem; }
+  table { margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Search by Class and Section</h2>
+  <form method="GET" action="/classes">
+    <div class="row g-3 align-items-center">
+      <div class="col-md-5">
+        <label for="class" class="form-label">Class</label>
+        <select id="class" name="class" class="form-select" required>
+          <option value="" hidden>Select Class</option>
+          {% for c in range(1, 11) %}
+          <option value="{{ c }}" {% if selected_class and selected_class|int == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-5">
+        <label for="section" class="form-label">Section</label>
+        <select id="section" name="section" class="form-select" required>
+          <option value="" hidden>Select Section</option>
+          {% for s in ['A', 'B', 'C', 'D'] %}
+          <option value="{{ s }}" {% if selected_section == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-primary w-100" type="submit">Find</button>
+      </div>
+    </div>
+  </form>
+
+  {% if selected_class and selected_section %}
+  <hr />
+  <h4>Attendance Summary for Class {{ selected_class }} - Section {{ selected_section }}</h4>
+  <p>Overall Class Attendance Today: <strong>{{ class_attendance }}%</strong></p>
+  {% endif %}
+
+  {% if students is defined %}
+    {% if students|length > 0 %}
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Name</th>
+        <th>Roll</th>
+        <th>Attendance %</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stu in students %}
+      <tr>
+        <td>{{ stu.name }}</td>
+        <td>{{ stu.roll }}</td>
+        <td>
+          <div class="progress" style="height:20px;">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: {{ stu.attendance_percent }}%;"
+                 aria-valuenow="{{ stu.attendance_percent }}" aria-valuemin="0" aria-valuemax="100">
+              {{ stu.attendance_percent }}%
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    {% else %}
+      <p>No student records found for this class and section on today's attendance.</p>
+    {% endif %}
+  {% endif %}
+
+  <a href="/" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+</body>
+</html>

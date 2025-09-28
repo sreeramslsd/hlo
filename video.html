@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mark Attendance from Video</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Background with animated particles */
+    <style>
+  /* Background with animated particles + image */
+  #particle-background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1;
+  background: url("C:\\Users\\sreeram\\OneDrive\\Desktop\\modi\\static\\images\\WhatsApp Image 2025-09-25 at 04.26.53_428b4051.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    animation: floatUp 20s linear infinite;
+    opacity: 0.3;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.6));
+  }
+  .particle:nth-child(odd) {
+    animation-duration: 25s;
+    opacity: 0.22;
+    filter: drop-shadow(0 0 3px rgba(255,255,255,0.4));
+  }
+  
+
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      20% { opacity: 0.4; }
+      100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+    }
+
+    /* Page Wrapper */
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+      background: transparent;
+      color: #fff;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Main Card */
+    .upload-container {
+      position: relative;
+      width: 600px;
+      max-width: 90vw;
+      padding: 3rem 3rem 3.5rem;
+      background: rgba(19,25,43,0.85);
+      border-radius: 24px;
+      box-shadow:
+        0 8px 32px rgba(16,40,100,0.7),
+        inset 0 0 60px 1px rgba(88,152,254,0.7);
+      backdrop-filter: blur(18px);
+      border: 2px solid rgba(102,146,255,0.3);
+      animation: slideUpFadeIn 1s ease forwards;
+      overflow: hidden;
+    }
+
+    @keyframes slideUpFadeIn {
+      0% {opacity: 0; transform: translateY(25px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Headings */
+    h1 {
+      font-weight: 900;
+      font-size: 2.75rem;
+      margin: 0 0 1rem;
+      text-align: center;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #00f260, #0575e6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Button styling */
+    .btn-upload {
+      display: block;
+      width: 100%;
+      background: linear-gradient(90deg, #00f260, #0575e6);
+      color: #0a1b3a;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 0.8rem 0;
+      border: none;
+      border-radius: 36px;
+      box-shadow: 0 6px 15px rgba(0,242,96,0.58);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-upload:hover {
+      filter: brightness(115%);
+      box-shadow: 0 10px 20px rgba(0,242,96,0.7);
+    }
+
+    /* File input */
+    .custom-file-input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border-radius: 36px;
+      background: linear-gradient(90deg, #1b2a4d, #16203e);
+      border: 2px solid #4e5c7c;
+      color: #91acf1;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: border-color 0.3s ease;
+      outline: none;
+      cursor: pointer;
+    }
+    .custom-file-input:hover,
+    .custom-file-input:focus {
+      border-color: #00f260;
+      color: #d7f9d7;
+      background: #0a1b3a;
+    }
+
+    /* Video display */
+    #video-player {
+      display: none;
+      margin: 1.8rem auto 0;
+      width: 100%;
+      border-radius: 20px;
+      border: 3px solid #00f260;
+      box-shadow: 0 0 40px #00f260;
+      max-height: 300px;
+      object-fit: contain;
+    }
+
+    /* Overlay and names */
+    #marking-overlay {
+      margin-top: 1rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #00f260;
+      text-shadow: 0 0 7px #00f260aa;
+      height: 35px;
+      display: none;
+    }
+    #found-names {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+      color: #ffd73d;
+      font-weight: 700;
+      text-shadow: 0 0 10px #ffb400cc;
+    }
+
+    /* Error message */
+    .error-msg {
+      margin-top: 1rem;
+      color: #ff4c4c;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.8px;
+      text-shadow: 0 0 6px #ff4c4c88;
+    }
+
+    .back-btn {
+      margin-top: 2rem;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      color: #00f260;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .back-btn:hover {
+      color: #65ff9a;
+      text-shadow: 0 0 12px #65ff9abb;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="particle-background"></div>
+
+  <div class="upload-container">
+    <h1>Mark Attendance from Video</h1>
+    <p class="info-hint">Select a classroom video. Recognized students' names will be listed with attendance % after processing.</p>
+
+    <form id="video-upload-form" method="POST" action="/video_attendance" enctype="multipart/form-data" novalidate>
+      <input type="file" id="video-input" name="video" accept="video/*" class="custom-file-input" required />
+      <button id="upload-btn" class="btn-upload" type="submit">Upload &amp; Start Recognition</button>
+    </form>
+
+    <video id="video-player" controls></video>
+    <div id="marking-overlay" class="marking-overlay"></div>
+    <div id="found-names"></div>
+
+    {% if error %}
+    <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    <a href="/" class="back-btn">&#8592; Back to Dashboard</a>
+  </div>
+
+  <script>
+    // Create floating particles background
+    function createParticle(sizeClass) {
+      const p = document.createElement('div');
+      p.classList.add('particle', sizeClass);
+      p.style.left = `${Math.random() * 100}vw`;
+      p.style.top = '110vh';
+      p.style.animationDelay = `${Math.random() * 20}s`;
+      return p;
+    }
+
+    function populateParticles() {
+      const container = document.getElementById('particle-background');
+      container.innerHTML = '';
+      for(let i=0; i<20; i++) {
+        container.appendChild(createParticle('small'));
+        container.appendChild(createParticle('medium'));
+        container.appendChild(createParticle('large'));
+      }
+    }
+    populateParticles();
+
+    // Elements
+    const videoInput = document.getElementById('video-input');
+    const videoPlayer = document.getElementById('video-player');
+    const form = document.getElementById('video-upload-form');
+    const markingOverlay = document.getElementById('marking-overlay');
+    const foundNames = document.getElementById('found-names');
+    let recognizedSet = new Set();
+
+    videoInput.addEventListener('change', () => {
+      markingOverlay.style.display = 'none';
+      foundNames.style.display = 'none';
+      recognizedSet.clear();
+      if(videoInput.files.length > 0) {
+        const url = URL.createObjectURL(videoInput.files[0]);
+        videoPlayer.src = url;
+        videoPlayer.style.display = 'block';
+        markingOverlay.textContent = '';
+        foundNames.textContent = '';
+      } else {
+        videoPlayer.src = '';
+        videoPlayer.style.display = 'none';
+      }
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if(videoInput.files.length === 0) return false;
+
+      markingOverlay.style.display = 'block';
+      markingOverlay.textContent = 'Recognition in progress...';
+      foundNames.style.display = 'none';
+      foundNames.textContent = '';
+
+      const formData = new FormData();
+      formData.append('video', videoInput.files[0]);
+
+      fetch('/video_attendance', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        markingOverlay.style.display = 'none';
+        if(data.error) {
+          foundNames.style.display = 'block';
+          foundNames.innerHTML = `<span class="error-msg">${data.error}</span>`;
+          videoPlayer.style.border = 'none';
+          return;
+        }
+        if(data.students && data.students.length > 0) {
+          foundNames.style.display = 'block';
+          const names = data.students.filter((v,i,a) => a.indexOf(v) === i); // unique names
+          let listHTML = `<strong>Present Students (${names.length}):</strong><br>`;
+          listHTML += names.map(n => `<span style="color:#00ffaa; font-weight: 700; font-size:1.15rem;">${n}</span>`).join(', ');
+          foundNames.innerHTML = listHTML;
+
+          // Ideally, you pass % attendance from backend as well
+          videoPlayer.style.border = '4px solid #10f9a3';
+        } else {
+          foundNames.style.display = 'block';
+          foundNames.textContent = 'No registered student detected in video.';
+          videoPlayer.style.border = 'none';
+        }
+      })
+      .catch(() => {
+        markingOverlay.style.display = 'none';
+        foundNames.style.display = 'block';
+        foundNames.innerHTML = '<span class="error-msg">Failed to mark attendance.</span>';
+        videoPlayer.style.border = 'none';
+      })
+    });
+  </script>
+</body>
+</html>
